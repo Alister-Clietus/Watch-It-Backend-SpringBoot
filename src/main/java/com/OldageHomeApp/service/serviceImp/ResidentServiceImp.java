@@ -40,7 +40,6 @@ public class ResidentServiceImp implements ResidentService
 
 	        // Create a new ResidentEntity object
 	        ResidentEntity residentEntity = new ResidentEntity();
-	        residentEntity.setId(residentdto.getId());
 	        residentEntity.setFirstName(residentdto.getFirstName());
 	        residentEntity.setLastName(residentdto.getLastName());
 	        residentEntity.setDateOfBirth(residentdto.getDateOfBirth());

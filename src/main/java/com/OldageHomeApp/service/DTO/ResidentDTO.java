@@ -10,8 +10,6 @@ import jakarta.validation.constraints.Size;
 
 public class ResidentDTO 
 {
-    @NotNull(message = "ID cannot be null")
-    private Long id;
 
     @NotBlank(message = "First name cannot be blank")
     @Size(min = 2, max = 100, message = "First name must be between 2 and 100 characters")
@@ -20,7 +18,31 @@ public class ResidentDTO
     @NotBlank(message = "Last name cannot be blank")
     @Size(min = 2, max = 100, message = "Last name must be between 2 and 100 characters")
     private String lastName;
+    
+//    @NotEmpty(message = "Age cannot be blank")
+    private int age;
+    
+    @NotBlank(message = "Adhaar Number cannot be blank")
+    private String adhaarNumber;
+    
+    @NotBlank(message = "Pan Card Id Number cannot be blank")
+    private String panId;
+    
+    @NotBlank(message = "No of Childrens cannot be blank")
+    private String no_of_childrens;
+    
+    @NotBlank(message = "Native Place cannot be blank")
+    @Size(min = 2, max = 100, message = "Native Place must be between 2 and 100 characters")
+    private String nativeplace;
 
+    @NotBlank(message = "Guardian cannot be blank")
+    @Size(min = 2, max = 100, message = "Last name must be between 2 and 100 characters")
+    private String guardian;
+    
+    @NotBlank(message = "Birth Place cannot be blank")
+    @Size(min = 2, max = 100, message = "Birth Place must be between 2 and 100 characters")
+    private String birthPlace;
+    
     @NotNull(message = "Date of birth cannot be null")
     @Past(message = "Date of birth must be a past date")
     private Date dateOfBirth;
@@ -36,12 +58,6 @@ public class ResidentDTO
     @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "Joined date must be in the format YYYY-MM-DD")
     private String joineddate; // e.g., "2022-06-15"
     
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
 	public String getFirstName() {
 		return firstName;
 	}
@@ -77,6 +93,37 @@ public class ResidentDTO
 	}
 	public void setJoineddate(String joineddate) {
 		this.joineddate = joineddate;
+	}
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+	public String getNo_of_childrens() {
+		return no_of_childrens;
+	}
+	public void setNo_of_childrens(String no_of_childrens) {
+		this.no_of_childrens = no_of_childrens;
+	}
+	public String getNativeplace() {
+		return nativeplace;
+	}
+	public void setNativeplace(String nativeplace) {
+		this.nativeplace = nativeplace;
+	}
+	public String getGuardian() {
+		return guardian;
+	}
+	public void setGuardian(String guardian) {
+		this.guardian = guardian;
+	}
+	public String getBirthPlace() {
+		return birthPlace;
+	}
+	public void setBirthPlace(String birthPlace) {
+		this.birthPlace = birthPlace;
 	}
     
     
