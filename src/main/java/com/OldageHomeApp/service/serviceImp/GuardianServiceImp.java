@@ -4,10 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.OldageHomeApp.service.DTO.DoctorAppointmentDTO;
+import com.OldageHomeApp.service.DTO.DoctorDTO;
 import com.OldageHomeApp.service.DTO.GuardianDTO;
 import com.OldageHomeApp.service.DTO.GuardianUpdateDTO;
 import com.OldageHomeApp.service.DTO.ServiceResponse;
+import com.OldageHomeApp.service.entity.DoctorAppointmentEntity;
+import com.OldageHomeApp.service.entity.DoctorEntity;
 import com.OldageHomeApp.service.entity.GuardianEntity;
+import com.OldageHomeApp.service.repository.DoctorAppointmentRepo;
+import com.OldageHomeApp.service.repository.DoctorRepositor;
 import com.OldageHomeApp.service.repository.GuardianRepository;
 import com.OldageHomeApp.service.repository.ResidentRepository;
 import com.OldageHomeApp.service.service.GuardianService;
@@ -24,8 +31,15 @@ public class GuardianServiceImp implements GuardianService
 	@Autowired
 	ResidentRepository residentrepo;
 	
+	@Autowired
+	DoctorRepositor doctorrepo;
+	
+	@Autowired
+	DoctorAppointmentRepo doctorappointmentrepo;
+	
 	
 	public ServiceResponse createGuardian(GuardianDTO guardiandto) {
+		
 	    try {
 	        GuardianEntity guardianentity = new GuardianEntity();
 	        guardianentity.setAddress(guardiandto.getAddress());
@@ -33,10 +47,14 @@ public class GuardianServiceImp implements GuardianService
 	        guardianentity.setBloodgroup(guardiandto.getBloodgroup());
 	        guardianentity.setEmail(guardiandto.getEmail());
 	        guardianentity.setPhone(guardiandto.getPhone());
-	        guardianentity.setResidentId(guardiandto.getResidentId());
 	        guardianentity.setGender(guardiandto.getGender());
-	        
-	        guardianrepo.save(guardianentity);
+	        guardianentity.setPhone(guardiandto.getPhone());
+	        guardianentity.setFirstName(guardiandto.getFirstName());
+	        guardianentity.setLastName(guardiandto.getLastName());
+	        guardianentity.setAdhaarNumber(guardiandto.getAdhaarNumber());
+	        guardianentity.setPanId(guardiandto.getPanId());
+	        guardianentity.setNativeplace(guardiandto.getNativeplace());
+
 	        
 	        return new ServiceResponse(Constants.MESSAGE_STATUS.success, Constants.USERLOG.USER_ADDED, null);
 	        
@@ -65,7 +83,6 @@ public class GuardianServiceImp implements GuardianService
 	        guardiandto.setBloodgroup(guardianentity.getBloodgroup());
 	        guardiandto.setEmail(guardianentity.getEmail());
 	        guardiandto.setPhone(guardianentity.getPhone());
-	        guardiandto.setResidentId(guardianentity.getResidentId());
 	        guardiandto.setGender(guardianentity.getGender());
 	        
 	        return new ServiceResponse(Constants.MESSAGE_STATUS.success, Constants.USERLOG.USER_ADDED, null);
@@ -131,6 +148,76 @@ public class GuardianServiceImp implements GuardianService
 	        // Return a failure response with the exception message
 	        return new ServiceResponse(Constants.MESSAGE_STATUS.fail, "Failed to update guardian: " + e.getMessage(), null);
 	    }
+	}
+	
+	
+	public ServiceResponse createDoctor(DoctorDTO doctordto)
+	{
+	    try {
+	        // Validate input (this is usually handled by @Valid annotations in the controller layer)
+	        if (doctordto == null) {
+	            throw new IllegalArgumentException("Doctor details cannot be null");
+	        }
+	        // Create a new ResidentEntity object
+	        DoctorEntity doctorentity = new DoctorEntity();
+	        doctorentity.setAadharNumber(doctordto.getAadharNumber());
+	        doctorentity.setAddress(doctordto.getAddress());
+	        doctorentity.setEmail(doctordto.getEmail());
+	        doctorentity.setHospitalName(doctordto.getHospitalName());
+	        doctorentity.setName(doctordto.getName());
+	        doctorentity.setPhoneNumber(doctordto.getPhoneNumber());
+	        doctorentity.setSpecialization(doctordto.getSpecialization());
+
+	        // Save the resident entity to the database
+	        doctorrepo.save(doctorentity);
+
+	        // Create a success response
+	        return new ServiceResponse(Constants.MESSAGE_STATUS.success, Constants.USERLOG.USER_ADDED, null);
+	    } 
+	    catch (Exception e) 
+	    {
+	        // Log the exception
+	        System.err.println("Error occurred while creating resident: " + e.getMessage());
+	        
+	        logger.error("Error : " + e.getMessage(), e);
+
+	        // Return a failure response
+	        return new ServiceResponse(Constants.MESSAGE_STATUS.fail, Constants.USERLOG.USER_ADDED, null);
+	    }
+	}
+	
+	public ServiceResponse doctorAppointment(DoctorAppointmentDTO doctordto)
+	{
+		
+	    try {
+	        // Validate input (this is usually handled by @Valid annotations in the controller layer)
+	        if (doctordto == null) {
+	            throw new IllegalArgumentException("Doctor details cannot be null");
+	        }
+	        // Create a new ResidentEntity object
+	        DoctorAppointmentEntity doctorentity = new DoctorAppointmentEntity();
+
+	        doctorentity.setAppointmentDate(doctordto.getAppointmentDDate());
+	        doctorentity.setAppointmentTime(doctordto.getAppointmentTime());
+	        doctorentity.setPatientName(doctordto.getPatientName());
+	        doctorentity.setDoctorName(doctordto.getDoctorName());
+	        // Save the resident entity to the database
+	        doctorappointmentrepo.save(doctorentity);
+
+	        // Create a success response
+	        return new ServiceResponse(Constants.MESSAGE_STATUS.success, Constants.USERLOG.USER_ADDED, null);
+	    } 
+	    catch (Exception e) 
+	    {
+	        // Log the exception
+	        System.err.println("Error occurred while creating resident: " + e.getMessage());
+	        
+	        logger.error("Error : " + e.getMessage(), e);
+
+	        // Return a failure response
+	        return new ServiceResponse(Constants.MESSAGE_STATUS.fail, Constants.USERLOG.USER_ADDED, null);
+	    }
+		
 	}
 
 

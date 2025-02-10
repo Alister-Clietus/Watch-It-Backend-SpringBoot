@@ -10,6 +10,12 @@ public class GuardianEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id; // Primary Key
+    
+    @Column(name = "first_name", nullable = false, length = 50)
+    private String firstName; // First name of the resident
+
+    @Column(name = "last_name", nullable = false, length = 50)
+    private String lastName; // Last name of the resident
 
     @Column(name = "age", nullable = false, length = 3)
     private String age; // Guardian's age
@@ -31,6 +37,68 @@ public class GuardianEntity {
 
     @Column(name = "resident_id", nullable = false)
     private Long residentId; // Reference to the associated resident's ID
+    
+    @Column(name = "joined_date", nullable = false)
+    private String joinedDate; // Date when the resident joined
+    
+    @Column(name = "adhaar_number", nullable = false, length = 50)
+    private String adhaarNumber;
+    
+    @Column(name = "pan_id", nullable = false, length = 50)
+    private String panId;
+    
+    @Column(name = "native_place", nullable = false, length = 50)
+    private String nativeplace;
+    
+    
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getJoinedDate() {
+		return joinedDate;
+	}
+
+	public void setJoinedDate(String joinedDate) {
+		this.joinedDate = joinedDate;
+	}
+
+	public String getAdhaarNumber() {
+		return adhaarNumber;
+	}
+
+	public void setAdhaarNumber(String adhaarNumber) {
+		this.adhaarNumber = adhaarNumber;
+	}
+
+	public String getPanId() {
+		return panId;
+	}
+
+	public void setPanId(String panId) {
+		this.panId = panId;
+	}
+
+	public String getNativeplace() {
+		return nativeplace;
+	}
+
+	public void setNativeplace(String nativeplace) {
+		this.nativeplace = nativeplace;
+	}
 
 	public Long getId() {
 		return id;

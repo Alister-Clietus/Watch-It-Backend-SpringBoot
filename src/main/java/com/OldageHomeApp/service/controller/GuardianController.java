@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.OldageHomeApp.service.DTO.DoctorAppointmentDTO;
+import com.OldageHomeApp.service.DTO.DoctorDTO;
 import com.OldageHomeApp.service.DTO.GuardianDTO;
 import com.OldageHomeApp.service.DTO.GuardianUpdateDTO;
 import com.OldageHomeApp.service.service.GuardianService;
@@ -49,6 +51,20 @@ public class GuardianController
 	ResponseEntity<?> getGuardian(@PathVariable Long id)
 	{
 		return new ResponseEntity<>(guardianservice.getGuardian(id),HttpStatus.OK);
+	}
+	
+	//Doctor Controller APIS
+	
+	@PostMapping("/create-doctor")
+	ResponseEntity<?> createDoctor(@Valid @RequestBody DoctorDTO doctordto)
+	{
+		return new ResponseEntity<>(guardianservice.createDoctor(doctordto),HttpStatus.OK);
+	}
+	
+	@PostMapping("/doctor-appointment")
+	ResponseEntity<?> doctorAppointment(@Valid @RequestBody DoctorAppointmentDTO doctordto)
+	{
+		return new ResponseEntity<>(guardianservice.doctorAppointment(doctordto),HttpStatus.OK);
 	}
 
 

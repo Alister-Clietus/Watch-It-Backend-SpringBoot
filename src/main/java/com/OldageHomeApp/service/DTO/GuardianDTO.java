@@ -6,10 +6,19 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 public class GuardianDTO 
 {
 
+    @NotBlank(message = "First name cannot be blank")
+    @Size(min = 2, max = 100, message = "First name must be between 2 and 100 characters")
+    private String firstName;
+
+    @NotBlank(message = "Last name cannot be blank")
+    @Size(min = 2, max = 100, message = "Last name must be between 2 and 100 characters")
+    private String lastName;
+    
     @NotNull(message = "Age cannot be null")
     @Min(value = 0, message = "Age must be greater than or equal to 0")
     @Max(value = 150, message = "Age must be less than or equal to 150")
@@ -33,9 +42,61 @@ public class GuardianDTO
     @Pattern(regexp = "^\\+?[0-9]{10,15}$", message = "Invalid phone number")
     private String phone;
     
-    @NotNull(message = "Resident ID cannot be null")
-    private Long residentId;
+    
+    @NotBlank(message = "Adhaar Number cannot be blank")
+    @Pattern(regexp = "^[0-9]{12}$", message = "Adhaar Number must be exactly 12 digits and contain only numbers")
+    private String adhaarNumber;
+    
+    @NotBlank(message = "Pan Card Id Number cannot be blank")
+    @Pattern(regexp = "^[A-Z]{5}[0-9]{4}[A-Z]{1}$", message = "Pan Card Id must be 10 characters: 5 letters, 4 digits, 1 letter (e.g., ABCDE1234F)")
+    private String panId;
+    
+    @NotBlank(message = "Native Place cannot be blank")
+    @Size(min = 2, max = 100, message = "Native Place must be between 2 and 100 characters")
+    private String nativeplace;
 
+    @NotBlank(message = "Joined date cannot be blank")
+    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "Joined date must be in the format YYYY-MM-DD")
+    private String joineddate; // e.g., "2022-06-15"
+    
+    
+    
+	public String getFirstName() {
+		return firstName;
+	}
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+	public String getLastName() {
+		return lastName;
+	}
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+	public String getAdhaarNumber() {
+		return adhaarNumber;
+	}
+	public void setAdhaarNumber(String adhaarNumber) {
+		this.adhaarNumber = adhaarNumber;
+	}
+	public String getPanId() {
+		return panId;
+	}
+	public void setPanId(String panId) {
+		this.panId = panId;
+	}
+	public String getNativeplace() {
+		return nativeplace;
+	}
+	public void setNativeplace(String nativeplace) {
+		this.nativeplace = nativeplace;
+	}
+	public String getJoineddate() {
+		return joineddate;
+	}
+	public void setJoineddate(String joineddate) {
+		this.joineddate = joineddate;
+	}
 	public String getAge() {
 		return age;
 	}
@@ -71,12 +132,6 @@ public class GuardianDTO
 	}
 	public void setPhone(String phone) {
 		this.phone = phone;
-	}
-	public Long getResidentId() {
-		return residentId;
-	}
-	public void setResidentId(Long residentId) {
-		this.residentId = residentId;
 	}
     
     

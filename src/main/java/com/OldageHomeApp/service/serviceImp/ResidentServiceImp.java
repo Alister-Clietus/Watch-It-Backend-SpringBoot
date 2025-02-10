@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.OldageHomeApp.service.DTO.ResidentDTO;
 import com.OldageHomeApp.service.DTO.ResidentHealthDTO;
+import com.OldageHomeApp.service.DTO.ResidentUpdateDTO;
 import com.OldageHomeApp.service.DTO.ServiceResponse;
 import com.OldageHomeApp.service.entity.ResidentEntity;
 import com.OldageHomeApp.service.entity.ResidentHealthEntity;
@@ -42,9 +43,18 @@ public class ResidentServiceImp implements ResidentService
 	        ResidentEntity residentEntity = new ResidentEntity();
 	        residentEntity.setFirstName(residentdto.getFirstName());
 	        residentEntity.setLastName(residentdto.getLastName());
+	        residentEntity.setAdhaarNumber(residentdto.getAdhaarNumber());
+	        residentEntity.setPanId(residentdto.getPanId());
+	        residentEntity.setNo_of_childrens(residentdto.getNo_of_childrens());
+	        residentEntity.setNativeplace(residentdto.getNativeplace());
+	        residentEntity.setGuardian(residentdto.getGuardian());
+	        residentEntity.setBirthPlace(residentdto.getBirthPlace());
 	        residentEntity.setDateOfBirth(residentdto.getDateOfBirth());
 	        residentEntity.setGender(residentdto.getGender());
 	        residentEntity.setAddress(residentdto.getAddress());
+	        residentEntity.setBloodGroup(residentdto.getBloodGroup());
+	        residentEntity.setWeight(residentdto.getWeight());
+	        residentEntity.setHeight(residentdto.getHeight());
 	        residentEntity.setJoinedDate(residentdto.getJoineddate());
 
 	        // Save the resident entity to the database
@@ -74,7 +84,7 @@ public class ResidentServiceImp implements ResidentService
 
 	        // Convert the entity to a DTO
 	        ResidentDTO residentDTO = new ResidentDTO();
-	        residentDTO.setId(residentEntity.getId());
+//	        residentDTO.setId(residentEntity.getId());
 	        residentDTO.setFirstName(residentEntity.getFirstName());
 	        residentDTO.setLastName(residentEntity.getLastName());
 	        residentDTO.setDateOfBirth(residentEntity.getDateOfBirth());
@@ -123,7 +133,7 @@ public class ResidentServiceImp implements ResidentService
 	    }
 	}
 
-	public ServiceResponse updateResident(ResidentDTO residentdto) {
+	public ServiceResponse updateResident(ResidentUpdateDTO residentdto) {
 	    try {
 	        // Find the existing resident by ID
 	        ResidentEntity residentEntity = residentrepo.findById(residentdto.getId())
@@ -219,6 +229,8 @@ public class ResidentServiceImp implements ResidentService
 	        return new ServiceResponse(Constants.MESSAGE_STATUS.fail, "Failed to update resident health details: " + e.getMessage(), null);
 	    }
 	}
+	
+
 
 
 

@@ -56,10 +56,5 @@ public class ResidentController
 		return new ResponseEntity<>(residentservice.deleteResident(id),HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/update-resident")
-	ResponseEntity<?> UpdateResident(@Valid @RequestBody ResidentDTO residentDTO)
-	{
-		return new ResponseEntity<>(residentservice.updateResident(residentDTO),HttpStatus.OK);
-	}
 
 }
