@@ -35,8 +35,6 @@ public class GuardianEntity {
     @Column(name = "phone", nullable = false, unique = true, length = 15)
     private String phone; // Phone number of the guardian
 
-    @Column(name = "resident_id", nullable = false)
-    private Long residentId; // Reference to the associated resident's ID
     
     @Column(name = "joined_date", nullable = false)
     private String joinedDate; // Date when the resident joined
@@ -156,13 +154,7 @@ public class GuardianEntity {
 		this.phone = phone;
 	}
 
-	public Long getResidentId() {
-		return residentId;
-	}
 
-	public void setResidentId(Long residentId) {
-		this.residentId = residentId;
-	}
     
     
 }

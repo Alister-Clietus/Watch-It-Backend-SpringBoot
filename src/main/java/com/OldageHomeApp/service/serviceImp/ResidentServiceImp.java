@@ -2,7 +2,13 @@ package com.OldageHomeApp.service.serviceImp;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.OldageHomeApp.service.DTO.ResidentDTO;
@@ -11,11 +17,17 @@ import com.OldageHomeApp.service.DTO.ResidentUpdateDTO;
 import com.OldageHomeApp.service.DTO.ServiceResponse;
 import com.OldageHomeApp.service.entity.ResidentEntity;
 import com.OldageHomeApp.service.entity.ResidentHealthEntity;
+import com.OldageHomeApp.service.entity.ResidentPdfFilesEntity;
 import com.OldageHomeApp.service.repository.GuardianRepository;
 import com.OldageHomeApp.service.repository.ResidentHealthRepositoy;
+import com.OldageHomeApp.service.repository.ResidentPdfFilesRepo;
 import com.OldageHomeApp.service.repository.ResidentRepository;
+import com.OldageHomeApp.service.repository.specification.InmatesSpecification;
 import com.OldageHomeApp.service.service.ResidentService;
 import com.OldageHomeApp.service.util.Constants;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ResidentServiceImp implements ResidentService
@@ -31,6 +43,9 @@ public class ResidentServiceImp implements ResidentService
 	@Autowired
 	ResidentHealthRepositoy residentHealthRepo;
 	
+	@Autowired
+	ResidentPdfFilesRepo residentpdffilesrepo;
+	
 	public ServiceResponse createResident(ResidentDTO residentdto) 
 	{
 	    try {
@@ -40,6 +55,7 @@ public class ResidentServiceImp implements ResidentService
 	        }
 
 	        // Create a new ResidentEntity object
+	        ResidentPdfFilesEntity residentpdffilesentity=new ResidentPdfFilesEntity();
 	        ResidentEntity residentEntity = new ResidentEntity();
 	        residentEntity.setFirstName(residentdto.getFirstName());
 	        residentEntity.setLastName(residentdto.getLastName());
@@ -56,7 +72,8 @@ public class ResidentServiceImp implements ResidentService
 	        residentEntity.setWeight(residentdto.getWeight());
 	        residentEntity.setHeight(residentdto.getHeight());
 	        residentEntity.setJoinedDate(residentdto.getJoineddate());
-
+	        residentpdffilesentity.setName(residentdto.getFirstName());
+	        residentpdffilesrepo.save(residentpdffilesentity);
 	        // Save the resident entity to the database
 	        residentrepo.save(residentEntity);
 
@@ -220,7 +237,9 @@ public class ResidentServiceImp implements ResidentService
 
 	        // Return a success response
 	        return new ServiceResponse(Constants.MESSAGE_STATUS.success, "Resident health details updated successfully", null);
-	    } catch (Exception e) {
+	    } 
+	    catch (Exception e) 
+	    {
 	        // Log the exception
 	        System.err.println("Error occurred while updating resident health details: " + e.getMessage());
 	        e.printStackTrace();
@@ -229,6 +248,56 @@ public class ResidentServiceImp implements ResidentService
 	        return new ServiceResponse(Constants.MESSAGE_STATUS.fail, "Failed to update resident health details: " + e.getMessage(), null);
 	    }
 	}
+	
+
+	
+	public JSONObject getAllResident(String searchParam,int start,int pageSize)
+	{        
+		List<JSONObject> residentDetails = new ArrayList<>();
+		JSONObject result = new JSONObject();
+	    try {
+	      Pageable pageable = PageRequest.of(start / pageSize, pageSize);
+	      Specification<ResidentEntity> spec = InmatesSpecification.getno_of_childrensSpec(searchParam);
+	        Page<ResidentEntity> residents = residentrepo.findAll(spec, pageable);
+	      JSONArray array = new JSONArray();
+//	      JSONArray countByStatus = countByStatus(spec);
+	      for (ResidentEntity resident : residents) 
+	      {
+	        JSONObject obj = new JSONObject();
+	        obj.put("id", resident.getId());
+	        obj.put("firstName", resident.getFirstName());
+	        obj.put("lastName", resident.getLastName());
+	        obj.put("adhaarNumber", resident.getAdhaarNumber());
+	        obj.put("panId", resident.getPanId());
+	        obj.put("no_of_childrens", resident.getNo_of_childrens());
+	        obj.put("nativePlace", resident.getNativeplace());
+	        obj.put("guardian", resident.getGuardian());
+	        obj.put("birthPlace", resident.getBirthPlace());
+	        obj.put("dateOfBirth", resident.getDateOfBirth());
+	        obj.put("gender", resident.getGender());
+	        obj.put("address", resident.getAddress());
+	        obj.put("bloodGroup", resident.getBloodGroup());
+	        obj.put("weight", resident.getWeight());
+	        obj.put("height", resident.getHeight());
+	        obj.put("joinedDate", resident.getJoinedDate());
+	        array.add(obj);
+	      }
+	      result.put("aaData", array);
+	      result.put("iTotalDisplayRecords", residentrepo.findAll().size());
+	      result.put("iTotalRecords", residentrepo.findAll().size());
+//	      result.put("countByStatus", countByStatus);
+	    } catch (Exception e) {
+	      result.put("aaData", null);
+	      logger.error("Error:" + e.getMessage(), e);
+	      return result;
+	    }
+	    return result;
+	}
+	
+	
+
+
+	
 	
 
 

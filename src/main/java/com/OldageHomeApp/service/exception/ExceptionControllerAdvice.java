@@ -16,26 +16,43 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Order(value = Ordered.HIGHEST_PRECEDENCE)
-@RestControllerAdvice
-class ExceptionControllerAdvice {
-	private static Logger logger = LogManager.getLogger(ExceptionControllerAdvice.class);
 
+@RestControllerAdvice
+
+class ExceptionControllerAdvice
+{
+	private static Logger logger = LogManager.getLogger(ExceptionControllerAdvice.class);
+	
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<JSONObject> handleValidationExceptions(MethodArgumentNotValidException ex) {
+	
+	public ResponseEntity<JSONObject> handleValidationExceptions(MethodArgumentNotValidException ex) 
+	{
 		JSONObject response = new JSONObject();
+		
 		JSONArray details = new JSONArray();
+		
 		ex.getBindingResult().getAllErrors().forEach((error) -> {
+			
 			JSONObject detail = new JSONObject();
-			try {
+			
+			try 
+			{
 				detail.put(((FieldError) error).getField(), error.getDefaultMessage());
+				
 				details.add(detail);
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 				logger.error(e);
 			}
 		});
+		
 		response.put("code", "VALERRCOD");
+		
 		response.put("message", "Validation Failed");
+		
 		response.put("details", details);
 
 		return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);

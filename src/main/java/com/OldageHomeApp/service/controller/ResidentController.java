@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.OldageHomeApp.service.DTO.ResidentDTO;
@@ -54,6 +55,16 @@ public class ResidentController
 	ResponseEntity<?> DeleteResident(@PathVariable Long id)
 	{
 		return new ResponseEntity<>(residentservice.deleteResident(id),HttpStatus.OK);
+	}
+	
+	@GetMapping("/all-residents")
+	ResponseEntity<?> getAllResidentDetails(@RequestParam("searchParam") String searchParam,
+			@RequestParam("iDisplayStart") String iDisplayStart,
+			@RequestParam("iDisplayLength") String iDisplayLength)
+	{
+		System.out.println(iDisplayStart);
+		System.out.println(iDisplayLength);
+		return new ResponseEntity<>(residentservice.getAllResident(searchParam,0,10),HttpStatus.OK);
 	}
 	
 
