@@ -37,6 +37,12 @@ public class GuardianDTO
 
     @Email(message = "Invalid email address")
     private String email;
+    
+    @NotBlank(message = "Password is required")
+	private String password;
+    
+    @NotBlank(message = "Role is required")
+	private String role;
 
     @NotBlank(message = "Phone number cannot be blank")
     @Pattern(regexp = "^\\+?[0-9]{10,15}$", message = "Invalid phone number")
@@ -61,6 +67,18 @@ public class GuardianDTO
     
     
     
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
+	}
 	public String getFirstName() {
 		return firstName;
 	}

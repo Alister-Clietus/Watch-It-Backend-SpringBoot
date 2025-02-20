@@ -19,6 +19,7 @@ import com.OldageHomeApp.service.DTO.DoctorAppointmentDTO;
 import com.OldageHomeApp.service.DTO.DoctorDTO;
 import com.OldageHomeApp.service.DTO.GuardianDTO;
 import com.OldageHomeApp.service.DTO.GuardianUpdateDTO;
+import com.OldageHomeApp.service.DTO.LoginDTO;
 import com.OldageHomeApp.service.DTO.ResidentPdfFiles;
 import com.OldageHomeApp.service.service.GuardianService;
 
@@ -30,6 +31,12 @@ public class GuardianController {
 
 	@Autowired
 	GuardianService guardianservice;
+	
+	@PostMapping("/login")
+	ResponseEntity<?> loginFunction(@Valid @RequestBody LoginDTO loginDTO) {
+
+		return new ResponseEntity<>(guardianservice.loginFunction(loginDTO), HttpStatus.OK);
+	}
 
 	@PostMapping("/create-guardian")
 	ResponseEntity<?> createGuardian(@Valid @RequestBody GuardianDTO guardianDTO) {

@@ -18,6 +18,12 @@ public class DoctorDTO {
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid email format")
     private String email;
+    
+    @NotBlank(message = "Password is required")
+	private String password;
+    
+    @NotBlank(message = "Role is required")
+	private String role;
 
     @NotBlank(message = "Specialization is required")
     private String specialization;
@@ -27,6 +33,23 @@ public class DoctorDTO {
 
     @NotBlank(message = "Hospital name is required")
     private String hospitalName;
+
+    
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
 
 	public String getName() {
 		return name;

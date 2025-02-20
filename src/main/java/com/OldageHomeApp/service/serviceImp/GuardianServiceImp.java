@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,15 +21,18 @@ import com.OldageHomeApp.service.DTO.DoctorAppointmentDTO;
 import com.OldageHomeApp.service.DTO.DoctorDTO;
 import com.OldageHomeApp.service.DTO.GuardianDTO;
 import com.OldageHomeApp.service.DTO.GuardianUpdateDTO;
+import com.OldageHomeApp.service.DTO.LoginDTO;
 import com.OldageHomeApp.service.DTO.ResidentPdfFiles;
 import com.OldageHomeApp.service.DTO.ServiceResponse;
 import com.OldageHomeApp.service.entity.DoctorAppointmentEntity;
 import com.OldageHomeApp.service.entity.DoctorEntity;
 import com.OldageHomeApp.service.entity.GuardianEntity;
+import com.OldageHomeApp.service.entity.LoginEntity;
 import com.OldageHomeApp.service.entity.ResidentPdfFilesEntity;
 import com.OldageHomeApp.service.repository.DoctorAppointmentRepo;
 import com.OldageHomeApp.service.repository.DoctorRepositor;
 import com.OldageHomeApp.service.repository.GuardianRepository;
+import com.OldageHomeApp.service.repository.LoginRepo;
 import com.OldageHomeApp.service.repository.ResidentPdfFilesRepo;
 import com.OldageHomeApp.service.repository.ResidentRepository;
 import com.OldageHomeApp.service.repository.specification.DoctorAppointmentSpecification;
@@ -55,11 +59,19 @@ public class GuardianServiceImp implements GuardianService {
 	
 	@Autowired
 	ResidentPdfFilesRepo residentpdffilesrepo;
+	
+	@Autowired
+	LoginRepo loginrepo;
 
 	public ServiceResponse createGuardian(GuardianDTO guardiandto) {
 
 		try {
 			GuardianEntity guardianentity = new GuardianEntity();
+			LoginEntity loginentity =new LoginEntity();
+			loginentity.setEmail(guardiandto.getEmail());
+			loginentity.setPassword(guardiandto.getPassword());
+			loginentity.setRole(guardiandto.getRole());
+			loginrepo.save(loginentity);
 			guardianentity.setAddress(guardiandto.getAddress());
 			guardianentity.setAge(guardiandto.getAge());
 			guardianentity.setBloodgroup(guardiandto.getBloodgroup());
@@ -172,6 +184,12 @@ public class GuardianServiceImp implements GuardianService {
 			}
 			// Create a new ResidentEntity object
 			DoctorEntity doctorentity = new DoctorEntity();
+			LoginEntity loginentity =new LoginEntity();
+			loginentity.setEmail(doctordto.getEmail());
+			loginentity.setPassword(doctordto.getPassword());
+			loginentity.setRole(doctordto.getRole());
+			loginrepo.save(loginentity);
+			System.out.println("Login Details Saved");
 			doctorentity.setAadharNumber(doctordto.getAadharNumber());
 			doctorentity.setAddress(doctordto.getAddress());
 			doctorentity.setEmail(doctordto.getEmail());
@@ -373,7 +391,8 @@ public class GuardianServiceImp implements GuardianService {
 		
 	}
 	
-	public JSONObject getAllPatiennsPdfFiles() {
+	public JSONObject getAllPatiennsPdfFiles() 
+	{
 		JSONObject result = new JSONObject();
 		try {
 //			Pageable pageable = PageRequest.of(start / pageSize, pageSize);
@@ -403,5 +422,35 @@ public class GuardianServiceImp implements GuardianService {
 		}
 		return result;
 	}
+	
+	public JSONObject loginFunction(LoginDTO logindto)
+	{
+		Optional<LoginEntity> userOptional = loginrepo.findById(logindto.getEmail());
+        JSONObject response = new JSONObject();
+        if (userOptional.isPresent()) 
+        {
+        	LoginEntity user = userOptional.get();
+            if (user.getPassword().equals(logindto.getPassword())) {
+                response.put("email", user.getEmail());
+                response.put("role", user.getRole());
+                response.put("login", "success");
+                return response;
+            }
+            else
+            {
+                response.put("email", null);
+                response.put("role", null);
+                response.put("login", "fail");
+                return response;
+            	
+            }
+        }
+        response.put("email", null);
+        response.put("role", null);
+        response.put("login", "fail");
+        return response;
+
+	}
+
 
 }
