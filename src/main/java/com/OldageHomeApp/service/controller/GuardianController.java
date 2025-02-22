@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.OldageHomeApp.service.DTO.AdminDTO;
 import com.OldageHomeApp.service.DTO.DoctorAppointmentDTO;
 import com.OldageHomeApp.service.DTO.DoctorDTO;
 import com.OldageHomeApp.service.DTO.GuardianDTO;
@@ -42,6 +43,12 @@ public class GuardianController {
 	ResponseEntity<?> createGuardian(@Valid @RequestBody GuardianDTO guardianDTO) {
 
 		return new ResponseEntity<>(guardianservice.createGuardian(guardianDTO), HttpStatus.OK);
+	}
+	
+	@PostMapping("/create-admin")
+	ResponseEntity<?> createAdmin(@Valid @RequestBody AdminDTO guardianDTO) {
+
+		return new ResponseEntity<>(guardianservice.createAdmin(guardianDTO), HttpStatus.OK);
 	}
 
 	@PostMapping("/update-guardian")
@@ -79,6 +86,17 @@ public class GuardianController {
 		System.out.println(iDisplayStart);
 		System.out.println(iDisplayLength);
 		return new ResponseEntity<>(guardianservice.getAllGuardian(searchParam, Integer.parseInt(iDisplayStart),
+				Integer.parseInt(iDisplayLength)), HttpStatus.OK);
+	}
+	
+	@GetMapping("/getall-admin/search")
+	ResponseEntity<?> getAllAdmin(@RequestParam("searchParam") String searchParam,
+			@RequestParam("iDisplayStart") String iDisplayStart,
+			@RequestParam("iDisplayLength") String iDisplayLength) {
+		System.out.println(searchParam);
+		System.out.println(iDisplayStart);
+		System.out.println(iDisplayLength);
+		return new ResponseEntity<>(guardianservice.getAllAdmin(searchParam, Integer.parseInt(iDisplayStart),
 				Integer.parseInt(iDisplayLength)), HttpStatus.OK);
 	}
 
@@ -140,6 +158,36 @@ public class GuardianController {
 	ResponseEntity<?> getAllPatiennsPdfFiles() 
 	{
 		return new ResponseEntity<>(guardianservice.getAllPatiennsPdfFiles(), HttpStatus.OK);
+	}
+	
+	@GetMapping("/clear-patients-db")
+	ResponseEntity<?> clearAllPatiennsData() 
+	{
+		return new ResponseEntity<>(guardianservice.clearAllPatientsData(), HttpStatus.OK);
+	}
+	
+	@GetMapping("/clear-doctors-db")
+	ResponseEntity<?> clearAllDoctorsData() 
+	{
+		return new ResponseEntity<>(guardianservice.clearAllDoctorsData(), HttpStatus.OK);
+	}
+	
+	@GetMapping("/clear-all-appointments")
+	ResponseEntity<?> clearAllAppointments() 
+	{
+		return new ResponseEntity<>(guardianservice.clearAllAppointments(), HttpStatus.OK);
+	}
+	
+	@GetMapping("/clear-all-login")
+	ResponseEntity<?> clearAllLoginInformations() 
+	{
+		return new ResponseEntity<>(guardianservice.clearAllLoginInformations(), HttpStatus.OK);
+	}
+	
+	@GetMapping("/clear-all-guardian")
+	ResponseEntity<?> clearAllGuardianDatas() 
+	{
+		return new ResponseEntity<>(guardianservice.clearAllGuardianDatas(), HttpStatus.OK);
 	}
 	
 

@@ -67,5 +67,11 @@ public class ResidentController
 		return new ResponseEntity<>(residentservice.getAllResident(searchParam,0,10),HttpStatus.OK);
 	}
 	
+	@GetMapping("/get-residents-id")
+	ResponseEntity<?> getResidentIDDetails()
+	{
+		return new ResponseEntity<>(residentservice.getResidentIdName(),HttpStatus.OK);
+	}
+	
 
 }

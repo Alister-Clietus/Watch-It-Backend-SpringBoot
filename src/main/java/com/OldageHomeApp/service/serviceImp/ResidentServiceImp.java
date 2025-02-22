@@ -73,6 +73,10 @@ public class ResidentServiceImp implements ResidentService
 	        residentEntity.setHeight(residentdto.getHeight());
 	        residentEntity.setJoinedDate(residentdto.getJoineddate());
 	        residentpdffilesentity.setName(residentdto.getFirstName());
+	        ResidentHealthEntity residenthealthentity = new ResidentHealthEntity();
+	        residenthealthentity.setFirstName(residentdto.getFirstName());
+	        residenthealthentity.setLastName(residentdto.getLastName());
+	        residentHealthRepo.save(residenthealthentity);
 	        residentpdffilesrepo.save(residentpdffilesentity);
 	        // Save the resident entity to the database
 	        residentrepo.save(residentEntity);
@@ -217,7 +221,7 @@ public class ResidentServiceImp implements ResidentService
 	public ServiceResponse UpdateResidentHealthDetails(ResidentHealthDTO residenthealthdto) {
 	    try {
 	        // Check if the resident exists by ID in the ResidentEntity repository
-	        residentrepo.findById(residenthealthdto.getId())
+	    	residentHealthRepo.findById(residenthealthdto.getId())
 	                .orElseThrow(() -> new RuntimeException("Resident not found with ID: " + residenthealthdto.getId()));
 
 	        // Check if the resident's health record exists in the ResidentHealthEntity repository
@@ -280,6 +284,40 @@ public class ResidentServiceImp implements ResidentService
 	        obj.put("weight", resident.getWeight());
 	        obj.put("height", resident.getHeight());
 	        obj.put("joinedDate", resident.getJoinedDate());
+	        array.add(obj);
+	      }
+	      result.put("aaData", array);
+	      result.put("iTotalDisplayRecords", residentrepo.findAll().size());
+	      result.put("iTotalRecords", residentrepo.findAll().size());
+//	      result.put("countByStatus", countByStatus);
+	    } catch (Exception e) {
+	      result.put("aaData", null);
+	      logger.error("Error:" + e.getMessage(), e);
+	      return result;
+	    }
+	    return result;
+	}
+	
+	public JSONObject getResidentIdName()
+	{        
+		List<JSONObject> residentDetails = new ArrayList<>();
+		JSONObject result = new JSONObject();
+	    try {
+	        List<ResidentHealthEntity> residents = residentHealthRepo.findAll();
+	      JSONArray array = new JSONArray();
+//	      JSONArray countByStatus = countByStatus(spec);
+	      for (ResidentHealthEntity resident : residents) 
+	      {
+	        JSONObject obj = new JSONObject();
+	        obj.put("id", resident.getId());
+	        obj.put("firstName", resident.getFirstName());
+	        obj.put("lastName", resident.getLastName());
+	        obj.put("bloodPressure", resident.getBloodPressure());
+	        obj.put("sugarLevel", resident.getSugarLevel());
+	        obj.put("cholesterol", resident.getCholesterol());
+	        obj.put("isAbleToWalk", resident.getIsAbleToWalk());
+	        obj.put("appointmentDate", resident.getAppointmentDate());
+	        obj.put("recordedAt", resident.getRecordedAt());
 	        array.add(obj);
 	      }
 	      result.put("aaData", array);

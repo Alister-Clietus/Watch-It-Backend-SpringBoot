@@ -7,35 +7,50 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 
 public class ResidentHealthDTO 
 {
 	@NotNull(message = "ID cannot be null")
     private Long id;
+	
 
-    @NotBlank(message = "Blood pressure cannot be blank")
-    @Pattern(regexp = "^\\d{2,3}/\\d{2,3} mmHg$", message = "Invalid blood pressure format. Example: '120/80 mmHg'")
+    @NotBlank(message = "First name cannot be blank")
+    @Size(min = 2, max = 100, message = "First name must be between 2 and 100 characters")
+    private String firstName;
+
+    @NotBlank(message = "Last name cannot be blank")
+    @Size(min = 2, max = 100, message = "Last name must be between 2 and 100 characters")
+    private String lastName;
+
     private String bloodPressure;  // e.g., "120/80 mmHg"
 
-    @NotBlank(message = "Sugar level cannot be blank")
-    @Pattern(regexp = "^\\d+ mg/dL$", message = "Invalid sugar level format. Example: '110 mg/dL'")
     private String sugarLevel;    // e.g., "110 mg/dL"
 
-    @NotBlank(message = "Cholesterol level cannot be blank")
-    @Pattern(regexp = "^\\d+ mg/dL$", message = "Invalid cholesterol level format. Example: '180 mg/dL'")
     private String cholesterol;   // e.g., "180 mg/dL"
 
-    @NotNull(message = "Walking ability cannot be null")
     private Boolean isAbleToWalk; // true or false
 
-    @FutureOrPresent(message = "Appointment date must be in the future or present")
-    private Date appointmentDate; // Next doctor's appointment date
+    private String appointmentDate; // Next doctor's appointment date
 
-    @NotNull(message = "Recorded date cannot be null")
-    @PastOrPresent(message = "Recorded date must be in the past or present")
-    private Date recordedAt; // Date when the record was created
+    private String recordedAt; // Date when the record was created
     
+    
+    
+    
+	public String getFirstName() {
+		return firstName;
+	}
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+	public String getLastName() {
+		return lastName;
+	}
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
 	public Long getId() {
 		return id;
 	}
@@ -66,18 +81,19 @@ public class ResidentHealthDTO
 	public void setIsAbleToWalk(Boolean isAbleToWalk) {
 		this.isAbleToWalk = isAbleToWalk;
 	}
-	public Date getAppointmentDate() {
+	public String getAppointmentDate() {
 		return appointmentDate;
 	}
-	public void setAppointmentDate(Date appointmentDate) {
+	public void setAppointmentDate(String appointmentDate) {
 		this.appointmentDate = appointmentDate;
 	}
-	public Date getRecordedAt() {
+	public String getRecordedAt() {
 		return recordedAt;
 	}
-	public void setRecordedAt(Date recordedAt) {
+	public void setRecordedAt(String recordedAt) {
 		this.recordedAt = recordedAt;
-	} 
+	}
+ 
     
     
 

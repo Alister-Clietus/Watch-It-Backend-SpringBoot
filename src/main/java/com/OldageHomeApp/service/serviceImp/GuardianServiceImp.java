@@ -17,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import com.OldageHomeApp.service.DTO.AdminDTO;
 import com.OldageHomeApp.service.DTO.DoctorAppointmentDTO;
 import com.OldageHomeApp.service.DTO.DoctorDTO;
 import com.OldageHomeApp.service.DTO.GuardianDTO;
@@ -24,17 +25,20 @@ import com.OldageHomeApp.service.DTO.GuardianUpdateDTO;
 import com.OldageHomeApp.service.DTO.LoginDTO;
 import com.OldageHomeApp.service.DTO.ResidentPdfFiles;
 import com.OldageHomeApp.service.DTO.ServiceResponse;
+import com.OldageHomeApp.service.entity.AdminEntity;
 import com.OldageHomeApp.service.entity.DoctorAppointmentEntity;
 import com.OldageHomeApp.service.entity.DoctorEntity;
 import com.OldageHomeApp.service.entity.GuardianEntity;
 import com.OldageHomeApp.service.entity.LoginEntity;
 import com.OldageHomeApp.service.entity.ResidentPdfFilesEntity;
+import com.OldageHomeApp.service.repository.AdminRepo;
 import com.OldageHomeApp.service.repository.DoctorAppointmentRepo;
 import com.OldageHomeApp.service.repository.DoctorRepositor;
 import com.OldageHomeApp.service.repository.GuardianRepository;
 import com.OldageHomeApp.service.repository.LoginRepo;
 import com.OldageHomeApp.service.repository.ResidentPdfFilesRepo;
 import com.OldageHomeApp.service.repository.ResidentRepository;
+import com.OldageHomeApp.service.repository.specification.AdminSpecification;
 import com.OldageHomeApp.service.repository.specification.DoctorAppointmentSpecification;
 import com.OldageHomeApp.service.repository.specification.DoctorSpecification;
 import com.OldageHomeApp.service.repository.specification.GuardianSpecification;
@@ -47,6 +51,9 @@ public class GuardianServiceImp implements GuardianService {
 
 	@Autowired
 	GuardianRepository guardianrepo;
+	
+	@Autowired
+	AdminRepo adminrepo;
 
 	@Autowired
 	ResidentRepository residentrepo;
@@ -87,6 +94,43 @@ public class GuardianServiceImp implements GuardianService {
 			guardianentity.setJoinedDate(guardiandto.getJoineddate());
 
 			guardianrepo.save(guardianentity);
+			return new ServiceResponse(Constants.MESSAGE_STATUS.success, Constants.USERLOG.USER_ADDED, null);
+
+		} catch (Exception e) {
+			System.err.println("Error occurred while creating guardian: " + e.getMessage());
+
+			logger.error("Error : " + e.getMessage(), e);
+
+			return new ServiceResponse(Constants.MESSAGE_STATUS.fail, "Failed to add guardian: " + e.getMessage(),
+					null);
+		}
+	}
+	
+	public ServiceResponse createAdmin(AdminDTO guardiandto)
+	{
+		try {
+			AdminEntity guardianentity = new AdminEntity();
+			LoginEntity loginentity =new LoginEntity();
+			loginentity.setEmail(guardiandto.getEmail());
+			loginentity.setPassword(guardiandto.getPassword());
+			loginentity.setRole(guardiandto.getRole());
+			loginrepo.save(loginentity);
+			
+			guardianentity.setAddress(guardiandto.getAddress());
+			guardianentity.setAge(guardiandto.getAge());
+			guardianentity.setBloodgroup(guardiandto.getBloodgroup());
+			guardianentity.setEmail(guardiandto.getEmail());
+			guardianentity.setPhone(guardiandto.getPhone());
+			guardianentity.setGender(guardiandto.getGender());
+			guardianentity.setPhone(guardiandto.getPhone());
+			guardianentity.setFirstName(guardiandto.getFirstName());
+			guardianentity.setLastName(guardiandto.getLastName());
+			guardianentity.setAdhaarNumber(guardiandto.getAdhaarNumber());
+			guardianentity.setPanId(guardiandto.getPanId());
+			guardianentity.setNativeplace(guardiandto.getNativeplace());
+			guardianentity.setJoinedDate(guardiandto.getJoineddate());
+
+			adminrepo.save(guardianentity);
 			return new ServiceResponse(Constants.MESSAGE_STATUS.success, Constants.USERLOG.USER_ADDED, null);
 
 		} catch (Exception e) {
@@ -319,6 +363,48 @@ public class GuardianServiceImp implements GuardianService {
 		}
 		return result;
 	}
+	
+	public JSONObject getAllAdmin(String searchParam, int start, int pageSize) {
+		List<JSONObject> guardianDetails = new ArrayList<>();
+		System.out.println("in to gell all guadian");
+		JSONObject result = new JSONObject();
+		try {
+
+			Pageable pageable = PageRequest.of(start / pageSize, pageSize);
+			Specification<AdminEntity> spec = AdminSpecification.getemailSpec(searchParam);
+			Page<AdminEntity> usersPage = adminrepo.findAll(spec, pageable);
+			JSONArray array = new JSONArray();
+//	      JSONArray countByStatus = countByStatus(spec);
+			System.out.println("before for loop");
+
+			for (AdminEntity guardian : usersPage) {
+				JSONObject obj = new JSONObject();
+				System.out.println(guardian.getFirstName());
+				obj.put("firstName", guardian.getFirstName());
+				obj.put("lastName", guardian.getLastName());
+				obj.put("age", guardian.getAge());
+				obj.put("address", guardian.getAddress());
+				obj.put("bloodGroup", guardian.getBloodgroup());
+				obj.put("gender", guardian.getGender());
+				obj.put("email", guardian.getEmail());
+				obj.put("phone", guardian.getPhone());
+				obj.put("joinedDate", guardian.getJoinedDate());
+				obj.put("adhaarNumber", guardian.getAdhaarNumber());
+				obj.put("panId", guardian.getPanId());
+				obj.put("nativePlace", guardian.getNativeplace());
+				array.add(obj);
+			}
+			result.put("aaData", array);
+			result.put("iTotalDisplayRecords", guardianrepo.findAll().size());
+			result.put("iTotalRecords", guardianrepo.findAll().size());
+//	      result.put("countByStatus", countByStatus);
+		} catch (Exception e) {
+			result.put("aaData", null);
+			logger.error("Error:" + e.getMessage(), e);
+			return result;
+		}
+		return result;
+	}
 
 	public JSONObject getAllDoctorAppointment(String searchParam, int start, int pageSize) {
 		List<JSONObject> guardianDetails = new ArrayList<>();
@@ -451,6 +537,54 @@ public class GuardianServiceImp implements GuardianService {
         return response;
 
 	}
+
+    public ServiceResponse clearAllPatientsData() {
+        try {
+            residentrepo.deleteAll();
+            residentpdffilesrepo.deleteAll();
+            return new ServiceResponse(Constants.MESSAGE_STATUS.success, Constants.USERLOG.USER_LOG_SUCCESS, null);
+        } catch (Exception e) {
+            return new ServiceResponse(Constants.MESSAGE_STATUS.fail, e.getMessage(), null);
+        }
+    }
+
+    public ServiceResponse clearAllDoctorsData() {
+        try {
+            doctorrepo.deleteAll();
+            return new ServiceResponse(Constants.MESSAGE_STATUS.success, Constants.USERLOG.USER_LOG_SUCCESS, null);
+        } catch (Exception e) {
+            return new ServiceResponse(Constants.MESSAGE_STATUS.fail, e.getMessage(), null);
+        }
+    }
+
+    public ServiceResponse clearAllAppointments() {
+        try {
+            doctorappointmentrepo.deleteAll();
+            return new ServiceResponse(Constants.MESSAGE_STATUS.success, Constants.USERLOG.USER_LOG_SUCCESS, null);
+        } catch (Exception e) {
+            return new ServiceResponse(Constants.MESSAGE_STATUS.fail, e.getMessage(), null);
+        }
+    }
+
+    public ServiceResponse clearAllLoginInformations() {
+        try {
+            loginrepo.deleteAll();
+            return new ServiceResponse(Constants.MESSAGE_STATUS.success, Constants.USERLOG.USER_LOG_SUCCESS, null);
+        } catch (Exception e) {
+            return new ServiceResponse(Constants.MESSAGE_STATUS.fail, e.getMessage(), null);
+        }
+    }
+    
+	public ServiceResponse clearAllGuardianDatas()
+	{
+        try {
+        	guardianrepo.deleteAll();
+            return new ServiceResponse(Constants.MESSAGE_STATUS.success, Constants.USERLOG.USER_LOG_SUCCESS, null);
+        } catch (Exception e) {
+            return new ServiceResponse(Constants.MESSAGE_STATUS.fail, e.getMessage(), null);
+        }
+	}
+
 
 
 }

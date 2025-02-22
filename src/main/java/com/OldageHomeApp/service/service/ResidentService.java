@@ -17,5 +17,6 @@ public interface ResidentService
 	public ServiceResponse updateResident(ResidentUpdateDTO residentdto);
 	public ServiceResponse addResidentHealthDetails(ResidentHealthDTO residenthealthdto);
 	public ServiceResponse UpdateResidentHealthDetails(ResidentHealthDTO residenthealthdto);
+	public JSONObject getResidentIdName();
 
 }
